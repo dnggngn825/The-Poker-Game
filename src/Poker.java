@@ -43,7 +43,7 @@ public class Poker{
          * @return the invalid card from the hand
         */
 
-        // Not Undertaken when input is more than 5
+        // Not Undertaken when input is not multiple of 5
             notUndertaken(args);
 
         /*
@@ -64,19 +64,50 @@ public class Poker{
          */
             noPlayer = args.length/DEFAULT;
             players = new Player[noPlayer];
+            
+            // index 0 and 1 for compare tier and rank, index 2 for player id
+            // index 3 for draw case
+            int[] maxScore = {-1,-1,0, 0};
 
-        // Assign cards to player and excute player's hand
+        // Assign cards to player and execute player's hand
         for (int i = 0 ; i < noPlayer; i++ ){
 
-            players[i] = new Player(subArray(args,i*DEFAULT,DEFAULT),i+1);
+        	int[] array = {0,0};
+            players[i] = new Player(subArray(args,i*DEFAULT,DEFAULT),i+1,array);
             players[i].executeHandPlayer();
+            
+            // Compare if there are multiple players
+            if (noPlayer > 1) {
+            	if (players[i].getScore()[0] > maxScore[0] && players[i].getScore()[1] > maxScore[1]) {
+            		maxScore[2] = i+1;
+            		maxScore[0] = players[i].getScore()[0];
+            		maxScore[1] = players[i].getScore()[1];
+            		maxScore[3] = 0;
+            	}
+            	else if (players[i].getScore()[0] == maxScore[0] && players[i].getScore()[1] == maxScore[1]) {
+            		maxScore[3] = 1;
+            	}
+            	
+            }
         }
+        // Check winner and draw case
+        if (noPlayer > 1)
+        {
+        	System.out.println("----------------------");
+        	if (maxScore[3] == 1) {
+        		System.out.println("There is draw");
+        	}
+            else {
+            	System.out.println("Player " + maxScore[2] +" is the winner!");
+            }
+        }
+        
     //======================================================
 }
 
     /* For 1 player only, if there is more input then execute this */
     private static void notUndertaken(String[] args){
-        if (args.length > DEFAULT){
+        if (args.length % DEFAULT != 0){
             System.out.println("NOT UNDERTAKEN");
             System.exit(0);
         }

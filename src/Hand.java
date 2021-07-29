@@ -99,6 +99,11 @@ public class Hand {
             System.exit(0);
         }
     }
+    
+    public int getHighestRankValue(){
+        sortCardsByRank();
+        return this.cards[cards.length-1].getRank();
+    }
 
     /**
      * Sort the array by rank and return the rank of
